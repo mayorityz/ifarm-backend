@@ -19,7 +19,7 @@ exports.newInvestment = async (req, res, next) => {
       reference: ref,
       name: "mayowa",
       email: "mayority11@gmail.com",
-      callback_url: "http://localhost:8080/verify",
+      callback_url: "https://ifarms-herokuapp.com/verify",
     })
     .then((result) => {
       const { status, data } = result;
@@ -67,7 +67,7 @@ exports.verification = async (req, res, next) => {
           .catch((err) => console.log(err));
         console.log(update);
         if (update)
-          res.redirect("http://localhost:3000/dashboard/newinvestment");
+          res.redirect("https://ifarms-app.surge.sh/dashboard/newinvestment");
       } catch (error) {
         res.send("Database Connection Error!");
       }
