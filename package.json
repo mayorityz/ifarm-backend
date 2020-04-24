@@ -5,6 +5,12 @@
   "main": "app.js",
   "author": "mayority",
   "license": "MIT",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "engines": {
+    "node": "12.4.1"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
