@@ -19,7 +19,7 @@ exports.newInvestment = async (req, res, next) => {
       reference: ref,
       name: "mayowa",
       email: "mayority11@gmail.com",
-      callback_url: "https://ifarms-herokuapp.com/verify",
+      callback_url: "https://ifarms-app.herokuapp.com/verify",
     })
     .then((result) => {
       const { status, data } = result;
