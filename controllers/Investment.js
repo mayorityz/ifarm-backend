@@ -87,3 +87,22 @@ exports.investments = async (req, res, next) => {
     res.send("Error : " + error);
   }
 };
+
+exports.fetchAll = async (req, res, next) => {
+  try {
+    InvestmentModel.findAll({}).then((res_) => res.send(res_));
+  } catch (error) {
+    res.send("Error : " + error);
+  }
+};
+
+exports.fetchOne = async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    InvestmentModel.findOne({ _id: id })
+      .then((res_) => res.send(res_))
+      .catch((err) => console.log(err));
+  } catch (error) {
+    res.send("Error : " + error);
+  }
+};

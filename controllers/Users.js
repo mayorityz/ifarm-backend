@@ -107,3 +107,15 @@ exports.userUpdate = async (req, res, next) => {
     }
   );
 };
+
+exports.allUsers = async (req, res, next) => {
+  const query = UserModel.find({});
+  const promise = query.exec();
+  promise
+    .then((res_) => {
+      res.status(200).json(res_);
+    })
+    .catch((err) => {
+      res.status(500).send("Error!");
+    });
+};

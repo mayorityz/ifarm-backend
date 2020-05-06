@@ -21,7 +21,7 @@ router.post(
   userController.newUser
 );
 router.post("/login", userController.userLogin);
-
+router.get("/allusers", userController.allUsers);
 router.get("/profile/:userid", userController.userProfile);
 router.post("/updateprofile/:userid", userController.userUpdate);
 

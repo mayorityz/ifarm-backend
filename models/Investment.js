@@ -34,6 +34,10 @@ class Investments {
   static findAll(query) {
     return Investment.find(query);
   }
+
+  static findOne(query) {
+    return Investment.findOne(query);
+  }
 }
 
 module.exports = Investments;
