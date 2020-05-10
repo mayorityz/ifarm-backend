@@ -15,10 +15,16 @@ const checkPassWord = (password, hash) => {
   return bcrypt.compareSync(password, hash);
 };
 
-const checkUserExists = (email) => {
-  return UserModel.findOne({ email: email }, (err, res) => {
+const checkUserExists = async (email) => {
+  try{
+    return await UserModel.findOne({ email: email }, (err, res) => {
     return err ? "" : res;
-  });
+    });
+  }
+  catch(err){
+    return err
+  }
+  
 };
 
 exports.newUser = async (req, res, next) => {
@@ -38,8 +44,8 @@ exports.newUser = async (req, res, next) => {
       email,
       password: hash,
     });
-
-    checkUserExists(email) === null
+    
+    checkUserExists(email) !== null
       ? res.json({
           success: false,
           errors: [{ msg: `${email} already exists...` }],
@@ -52,7 +58,7 @@ exports.newUser = async (req, res, next) => {
               errors: [{ msg: "An Error Has Occured" }],
             });
           }
-          res.json({ success: true, errors: false });
+          if (result) res.json({ success: true, errors: false });
         });
   } catch (error) {
     console.log(error);
