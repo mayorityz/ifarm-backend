@@ -1,4 +1,5 @@
-const UserModel = require("../models/User");
+"use strict";
+const VendorModel = require("../models/Vendors");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
@@ -13,17 +14,27 @@ const checkPassWord = (password, hash) => {
   return bcrypt.compareSync(password, hash);
 };
 
-const checkUserExists = async (email) => {
+const checkUserExists = (email) => {
   try {
-    return await UserModel.findOne({ email: email }, (err, res) => {
-      return err ? "" : res;
+    return VendorModel.findOne({ email: email }, (err, res) => {
+      console.log("we are here!");
+      if (err) {
+        console.log(err);
+        return err;
+      }
+
+      if (res) {
+        console.log(res);
+        return res;
+      }
     });
   } catch (err) {
+    console.log(err);
     return err;
   }
 };
 
-exports.newUser = async (req, res, next) => {
+exports.newVendor = async (req, res, next) => {
   // create the new user account here ...
   const errors = validationResult(req);
   try {
@@ -34,7 +45,7 @@ exports.newUser = async (req, res, next) => {
 
     const { firstName, lastName, email, pass1: password } = req.body;
     const hash = encrypt(password);
-    const newAccount = new UserModel({
+    const newAccount = new VendorModel({
       firstName,
       lastName,
       email,
@@ -61,9 +72,9 @@ exports.newUser = async (req, res, next) => {
   }
 };
 
-exports.userLogin = async (req, res_, next) => {
+exports.login = async (req, res_, next) => {
   const { password, email } = req.body;
-  UserModel.findOne({ email: email }, (err, res) => {
+  VendorModel.findOne({ email: email }, (err, res) => {
     if (err) {
       console.log(err);
       res_.json({ success: false, msg: err.name });
@@ -89,35 +100,35 @@ exports.userLogin = async (req, res_, next) => {
   });
 };
 
-exports.userProfile = async (req, res, next) => {
-  const { userid } = req.params;
-  UserModel.findOne({ _id: userid }, (err, res_) => {
-    if (err) res.status(401).send("Database Error");
-    res.json(res_);
-  });
-};
+// exports.userProfile = async (req, res, next) => {
+//   const { userid } = req.params;
+//   VendorModel.findOne({ _id: userid }, (err, res_) => {
+//     if (err) res.status(401).send("Database Error");
+//     res.json(res_);
+//   });
+// };
 
-exports.userUpdate = async (req, res, next) => {
-  const { firstName, lastName, phone1, phone2, address, LGA, state } = req.body;
-  const { userid } = req.params;
-  UserModel.updateOne(
-    { _id: userid },
-    { firstName, lastName, phone1, phone2, address, LGA, State: state },
-    (err, res_) => {
-      if (err) console.log(err);
-      if (res_) res.json("Updated Successfully");
-    }
-  );
-};
+// exports.userUpdate = async (req, res, next) => {
+//   const { firstName, lastName, phone1, phone2, address, LGA, state } = req.body;
+//   const { userid } = req.params;
+//   VendorModel.updateOne(
+//     { _id: userid },
+//     { firstName, lastName, phone1, phone2, address, LGA, State: state },
+//     (err, res_) => {
+//       if (err) console.log(err);
+//       if (res_) res.json("Updated Successfully");
+//     }
+//   );
+// };
 
-exports.allUsers = async (req, res, next) => {
-  const query = UserModel.find({});
-  const promise = query.exec();
-  promise
-    .then((res_) => {
-      res.status(200).json(res_);
-    })
-    .catch((err) => {
-      res.status(500).send("Error!");
-    });
-};
+// exports.allUsers = async (req, res, next) => {
+//   const query = VendorModel.find({});
+//   const promise = query.exec();
+//   promise
+//     .then((res_) => {
+//       res.status(200).json(res_);
+//     })
+//     .catch((err) => {
+//       res.status(500).send("Error!");
+//     });
+// };
