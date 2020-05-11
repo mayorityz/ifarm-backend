@@ -43,6 +43,10 @@ class Products {
   static userProducts(query) {
     return Product.find(query);
   }
+
+  static productDetails(query) {
+    return Product.find(query);
+  }
 }
 
 module.exports = Products;

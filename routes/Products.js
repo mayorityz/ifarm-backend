@@ -26,5 +26,6 @@ Router.post(
   upload.array("file", 8),
   productsController.newProducts
 );
+Router.get("/productdetails/:id", productsController.productDetails);
 
 module.exports = Router;

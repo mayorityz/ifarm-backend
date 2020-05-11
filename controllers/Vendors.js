@@ -85,9 +85,13 @@ exports.login = async (req, res_, next) => {
       // sigin
       if (checkPassWord(password, res.password)) {
         console.log(res._id);
-        let token = jwt.sign({ id: res._id, email: email }, "iFarmSecretKey", {
-          expiresIn: "24h",
-        });
+        let token = jwt.sign(
+          { id: res._id, email: email, name: res.firstName },
+          "vendorLoggedIn",
+          {
+            expiresIn: "24h",
+          }
+        );
         res_.json({ success: true, msg: token });
       } else {
         console.log("Invalid Password");

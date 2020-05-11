@@ -77,3 +77,13 @@ exports.myProducts = (req, res, next) => {
     res.send(error);
   }
 };
+
+exports.productDetails = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    await Product.productDetails({ _id: id }).then((result) => {
+      console.log(result);
+      res.json({ status: "success", result });
+    });
+  } catch (error) {}
+};
