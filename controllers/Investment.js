@@ -1,8 +1,19 @@
 const InvestmentModel = require("../models/Investment");
+const UserModel = require("../models/User");
 const getReference = require("uuid");
 const paystack = require("paystack")(
   "sk_test_f22375735008edb501116fe73a2e5db6f4aaa68d"
 );
+
+const userDetails = async (id) => {
+  try {
+    return await UserModel.findById(id, (err, res) => {
+      return err ? "" : res;
+    });
+  } catch (err) {
+    return err;
+  }
+};
 
 exports.newInvestment = async (req, res, next) => {
   const { investmentAmt, duration, monthly, total, userID } = req.body;
@@ -13,12 +24,15 @@ exports.newInvestment = async (req, res, next) => {
     investmentBegins.getDate() + days
   );
 
+  let userInfo = await userDetails(userID);
+  const { firstName, lastName, email, phone1, address, profileImg } = userInfo;
+
   paystack.transaction
     .initialize({
       amount: investmentAmt * 100,
       reference: ref,
-      name: "mayowa",
-      email: "mayority11@gmail.com",
+      name: `${firstName} ${lastName}`,
+      email,
       callback_url: "https://ifarms-app.herokuapp.com/verify",
     })
     .then((result) => {
@@ -33,6 +47,14 @@ exports.newInvestment = async (req, res, next) => {
           dueDate: investmentEnds,
           investorId: userID,
           reference: ref,
+          investorDetails: {
+            firstName,
+            lastName,
+            email,
+            phone1,
+            address,
+            profileImg,
+          },
         });
         try {
           let stuff = inv.create();

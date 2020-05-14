@@ -11,6 +11,7 @@ const investmentSchema = new DB.Schema({
   dueDate: Date,
   history: Array,
   reference: String,
+  investorDetails: Object,
   payment: { type: Boolean, default: false },
   created: { type: Date, default: new Date() },
   isConcluded: { type: Boolean, default: false },
