@@ -27,5 +27,5 @@ Router.post(
   productsController.newProducts
 );
 Router.get("/productdetails/:id", productsController.productDetails);
-
+Router.post("/products/deleteitem", productsController.deleteProduct);
 module.exports = Router;

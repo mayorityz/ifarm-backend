@@ -87,3 +87,12 @@ exports.productDetails = async (req, res, next) => {
     });
   } catch (error) {}
 };
+
+exports.deleteProduct = async (req, res) => {
+  const { id } = req.body;
+  try {
+    await Product.delete(id).then((result) => {
+      res.json({ status: "success", result });
+    });
+  } catch (error) {}
+};

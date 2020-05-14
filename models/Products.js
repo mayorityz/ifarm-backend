@@ -47,6 +47,10 @@ class Products {
   static productDetails(query) {
     return Product.find(query);
   }
+
+  static delete(id) {
+    return Product.findByIdAndDelete(id);
+  }
 }
 
 module.exports = Products;
