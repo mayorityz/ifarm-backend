@@ -5,6 +5,18 @@ const paystack = require("paystack")(
   "sk_test_f22375735008edb501116fe73a2e5db6f4aaa68d"
 );
 
+const sortIntervals = async (firstDate, months) => {
+  var newdate = new Date();
+  let paymentIntervals = [];
+  for (let i = 1; i <= months; i++) {
+    newdate.setDate(firstDate.getDate() + 31);
+    paymentIntervals.push({
+      date: new Date(newdate).toDateString(),
+      status: "unpaid",
+    });
+  }
+  return paymentIntervals;
+};
 const userDetails = async (id) => {
   try {
     return await UserModel.findById(id, (err, res) => {
@@ -19,12 +31,15 @@ exports.newInvestment = async (req, res, next) => {
   const { investmentAmt, duration, monthly, total, userID } = req.body;
   const ref = `iFarms-${getReference.v1()}`;
   const investmentBegins = new Date();
-  const days = duration * 30;
+  const days = duration * 30; //duration is in months here...
   const investmentEnds = investmentBegins.setDate(
     investmentBegins.getDate() + days
   );
 
+  // call the function to create the time intervals for payments
+  let payoutSchedule = await sortIntervals(investmentBegins, duration);
   let userInfo = await userDetails(userID);
+
   const { firstName, lastName, email, phone1, address, profileImg } = userInfo;
 
   paystack.transaction
@@ -47,6 +62,7 @@ exports.newInvestment = async (req, res, next) => {
           dueDate: investmentEnds,
           investorId: userID,
           reference: ref,
+          payoutSchedule,
           investorDetails: {
             firstName,
             lastName,
