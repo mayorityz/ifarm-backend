@@ -121,3 +121,15 @@ exports.allUsers = async (req, res, next) => {
       res.status(500).send("Error!");
     });
 };
+
+exports.deleteUser = async (req, res) => {
+  const { id } = req.body;
+  UserModel.findByIdAndDelete(id)
+    .then((response) => {
+      console.log(response);
+      res.send("Record Deleted");
+    })
+    .catch((err) => {
+      res.send("An Error Has Occured! ", err);
+    });
+};
