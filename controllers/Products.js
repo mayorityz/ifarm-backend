@@ -1,11 +1,22 @@
 const Product = require("../models/Products");
-const cloudinary = require("cloudinary");
+const UserModel = require("../models/User");
 
+const cloudinary = require("cloudinary");
 cloudinary.config({
   cloud_name: "ifarms-app",
   api_key: "241998374551364",
   api_secret: "gZMJ6VDEmZ14EBOHPb-jKZgk5gA",
 });
+
+const userDetails = async (id) => {
+  try {
+    return await UserModel.findById(id, (err, res) => {
+      return err ? "" : res;
+    });
+  } catch (err) {
+    return err;
+  }
+};
 
 exports.allProducts = (req, res, next) => {
   const p = Product.displayAll();
@@ -16,10 +27,11 @@ exports.allProducts = (req, res, next) => {
   });
 };
 
-exports.newProducts = (req, res, next) => {
+exports.newProducts = async (req, res, next) => {
   const { body, files } = req;
   const { title, category, price, measurement, quantity, desc, userid } = body;
-
+  let userInfo = await userDetails(userid);
+  const { firstName, lastName, email, phone1, address, profileImg } = userInfo;
   const imgType = ["image/jpeg", "image/jpg", "image/png"];
   let errorMsg = [];
   let imgArray = [];
@@ -55,6 +67,14 @@ exports.newProducts = (req, res, next) => {
         description: desc,
         imgUrls: imgArray,
         vendorId: userid,
+        vendorDetails: {
+          firstName,
+          lastName,
+          email,
+          phone1,
+          address,
+          profileImg,
+        },
       });
       product.newProduct();
       res.send("Your Product Has Been Added To The Marketplace!!!");

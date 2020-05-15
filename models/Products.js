@@ -4,6 +4,7 @@ const productsSchema = new DB.Schema({
   title: String,
   price: Number,
   vendorId: String,
+  vendorDetails: Array,
   imgUrls: Array,
   measurement: String,
   category: String,
