@@ -1,5 +1,8 @@
 const Product = require("../models/Products");
 const UserModel = require("../models/User");
+const OrderModel = require("../models/Orders");
+const Paystack = require("../util/paystack");
+const uuid = require("uuid");
 
 const cloudinary = require("cloudinary");
 cloudinary.config({
@@ -113,6 +116,47 @@ exports.deleteProduct = async (req, res) => {
   try {
     await Product.delete(id).then((result) => {
       res.json({ status: "success", result });
+    });
+  } catch (error) {}
+};
+
+exports.checkout = async (req, res) => {
+  const { userId, cart, price } = req.body;
+
+  const userInfo = await userDetails(userId);
+  const { email, firstName, lastName, phone1, address } = userInfo;
+  const orderId = uuid.v1();
+  try {
+    const initPayment = new Paystack();
+    initPayment
+      .makePayment(
+        "http://localhost:8080/products/verifypayment",
+        price,
+        orderId,
+        firstName,
+        email
+      )
+      .then(async (ress) => {
+        await OrderModel.save(
+          userId,
+          orderId,
+          { email, firstName, lastName, phone1, address },
+          cart
+        );
+        res.send(ress);
+      });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.verify = async (req, res) => {
+  const reference = req.query.reference;
+  if (!reference) res.send("Invalid Payment Reference.");
+  try {
+    Paystack.verifyPayment(reference).then((res_) => {
+      console.log(res_);
+      res.send("here we aree");
     });
   } catch (error) {}
 };

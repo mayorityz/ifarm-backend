@@ -28,4 +28,6 @@ Router.post(
 );
 Router.get("/productdetails/:id", productsController.productDetails);
 Router.post("/products/deleteitem", productsController.deleteProduct);
+Router.post("/products/checkout", productsController.checkout);
+Router.get("/products/verifypayment", productsController.verify);
 module.exports = Router;
