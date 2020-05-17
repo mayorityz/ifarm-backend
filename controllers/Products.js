@@ -26,7 +26,7 @@ exports.allProducts = (req, res, next) => {
   p.then((res_) => {
     res.json(res_);
   }).catch((err) => {
-    res.status(500).json({ error });
+    res.status(500).json({ err });
   });
 };
 
@@ -141,7 +141,8 @@ exports.checkout = async (req, res) => {
           userId,
           orderId,
           { email, firstName, lastName, phone1, address },
-          cart
+          cart,
+          price
         );
         res.send(ress);
       });
@@ -155,8 +156,15 @@ exports.verify = async (req, res) => {
   if (!reference) res.send("Invalid Payment Reference.");
   try {
     Paystack.verifyPayment(reference).then((res_) => {
-      console.log(res_);
-      res.send("here we aree");
+      // update the db...
+      if (res_ === "Verification successful")
+        res.redirect(
+          "http://localhost:3000/dashboard/shopping-cart?status=completed"
+        );
+      else
+        res.redirect(
+          "http://localhost:3000/dashboard/shopping-cart?status=error"
+        );
     });
   } catch (error) {}
 };

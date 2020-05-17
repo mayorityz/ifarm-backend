@@ -6,7 +6,8 @@ const orderSchema = new DB.Schema({
   customerDetails: Object,
   order: Array,
   orderDate: Date,
-  paymentStatus: { type: String, default: "InComplete" },
+  totalPrice: Number,
+  paymentStatus: { type: String, default: "UnPaid" },
   orderStatus: { type: String, default: "InComplete" },
 });
 
@@ -19,13 +20,16 @@ class CustomerOrders {
    * @param {string} orderId - Order id
    * @param {object} customerDetails - Detailed Desc. of the Customer
    * @param {object} order - cart item
+   * @param {number} price - total price
    */
-  static async save(customerId, orderId, customerDetails, order) {
+  static async save(customerId, orderId, customerDetails, order, price) {
     const options = {
       customerId: customerId,
       orderId: orderId,
       customerDetails: customerDetails,
       order: order,
+      orderDate: Date.now(),
+      totalPrice: price,
     };
     try {
       let O = new Order(options);
@@ -36,6 +40,13 @@ class CustomerOrders {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  static async fetchall() {
+    return await Order.find({}, (err, docx) => {
+      if (err) return docx;
+      else return "error";
+    });
   }
 }
 
