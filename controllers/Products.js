@@ -130,7 +130,7 @@ exports.checkout = async (req, res) => {
     const initPayment = new Paystack();
     initPayment
       .makePayment(
-        "https://ifarms-app.surge.sh/products/verifypayment",
+        "https://ifarms-app.herokuapp.com/products/verifypayment",
         price,
         orderId,
         firstName,
