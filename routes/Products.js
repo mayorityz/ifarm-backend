@@ -30,4 +30,5 @@ Router.get("/productdetails/:id", productsController.productDetails);
 Router.post("/products/deleteitem", productsController.deleteProduct);
 Router.post("/products/checkout", productsController.checkout);
 Router.get("/products/verifypayment", productsController.verify);
+Router.post("/products/edit", productsController.update);
 module.exports = Router;

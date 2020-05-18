@@ -168,3 +168,30 @@ exports.verify = async (req, res) => {
     });
   } catch (error) {}
 };
+
+exports.update = async (req, res) => {
+  const {
+    id,
+    title,
+    price,
+    category,
+    measurement,
+    description,
+    quantity,
+  } = req.body;
+  let update_ = await Product.edit(
+    id,
+    title,
+    category,
+    price,
+    measurement,
+    quantity,
+    description
+  );
+
+  if (update_ !== "error") {
+    res.status(200).send("success");
+  } else {
+    res.status(500).send("An Error Occured");
+  }
+};

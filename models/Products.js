@@ -52,6 +52,43 @@ class Products {
   static delete(id) {
     return Product.findByIdAndDelete(id);
   }
+
+  /**
+   * Edit The User Product'
+   * @param {string} id - Product Unique Id
+   * @param {string} title - Product Title
+   * @param {string} category - Product Category
+   * @param {number} price - Product Price
+   * @param {string} measurement - Product Measurement/Rates
+   * @param {number} quantity - Product Quantity per Measurement
+   * @param {string} description - Product Description
+   */
+
+  static async edit(
+    id,
+    title,
+    category,
+    price,
+    measurement,
+    quantity,
+    description
+  ) {
+    const filter = { _id: id };
+    const update = {
+      title,
+      category,
+      price,
+      measurement,
+      quantity,
+      description,
+    };
+    try {
+      let doc = await Product.findOneAndUpdate(filter, update, { new: true });
+      return doc;
+    } catch (error) {
+      return "error";
+    }
+  }
 }
 
 module.exports = Products;
