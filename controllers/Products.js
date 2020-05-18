@@ -130,7 +130,7 @@ exports.checkout = async (req, res) => {
     const initPayment = new Paystack();
     initPayment
       .makePayment(
-        "http://localhost:8080/products/verifypayment",
+        "https://ifarms-app.surge.sh/products/verifypayment",
         price,
         orderId,
         firstName,
@@ -159,11 +159,11 @@ exports.verify = async (req, res) => {
       // update the db...
       if (res_ === "Verification successful")
         res.redirect(
-          "http://localhost:3000/dashboard/shopping-cart?status=completed"
+          "https://ifarms-app.surge.sh/dashboard/shopping-cart?status=completed"
         );
       else
         res.redirect(
-          "http://localhost:3000/dashboard/shopping-cart?status=error"
+          "https://ifarms-app.surge.sh/dashboard/shopping-cart?status=error"
         );
     });
   } catch (error) {}
