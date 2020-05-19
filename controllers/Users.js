@@ -1,4 +1,5 @@
 const UserModel = require("../models/User");
+const Emailer = require("../util/emailing");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
@@ -54,7 +55,18 @@ exports.newUser = async (req, res, next) => {
               errors: [{ msg: "An Error Has Occured" }],
             });
           }
-          if (result) res.json({ success: true, errors: false });
+          if (result) {
+            const emailMsg = `Hi ${firstName},
+            <p>You have successfully created an account on i-farms.com</p>
+            <p>Thank you for joining us!</p>
+            <p>Click the link below to verify & activate your account</p>
+            <a href="https://ifarms-app.surgh.sh/verify-my-account?email=${email}&uuid=${hash}">Verify Account</a>
+            <p>Thank you for joining.</p>
+            `;
+
+            Emailer.sendMail(email, emailMsg, "iFarms Account Verification");
+            res.json({ success: true, errors: false });
+          }
         });
   } catch (error) {
     console.log(error);
