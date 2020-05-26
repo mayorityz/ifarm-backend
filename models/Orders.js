@@ -48,6 +48,10 @@ class CustomerOrders {
       else return "error";
     });
   }
+
+  static async updateOrder(options, update) {
+    return await Order.findOneAndUpdate(options, update);
+  }
 }
 
 module.exports = CustomerOrders;

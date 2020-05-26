@@ -4,3 +4,13 @@ exports.orders = async (req, res) => {
   if (orderList === "error") res.status(500).send("Database Error!");
   else res.status(200).json(orderList);
 };
+
+exports.updateOrder = async (req, res) => {
+  const { id } = req.body;
+  let x = await OrderModel.updateOrder(
+    { _id: id },
+    { orderStatus: "Completed" }
+  );
+  if (x !== null) return res.send("Order Completed");
+  else return res.send("Connection Error!");
+};
