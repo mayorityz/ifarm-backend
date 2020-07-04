@@ -8,7 +8,7 @@ const userSchema = new DB.Schema({
   phone2: { type: Number, default: "" },
   password: String,
   createdWhen: { type: Date, default: Date.now },
-  status: { type: String, default: false },
+  status: { type: Boolean, default: false },
   address: { type: String, default: "" },
   profileImg: String,
   LGA: String,

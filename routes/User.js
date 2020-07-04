@@ -1,23 +1,27 @@
 const express = require("express");
-const { check } = require("express-validator");
+const { body } = require("express-validator");
 const router = express.Router();
-
+// middleware
+const userMiddleware = require("../middleware/Users.middleware");
+// controller
 const userController = require("../controllers/Users");
 
 router.post(
   "/newuser",
   [
-    check("firstName").trim().not().isEmpty(),
-    check("lastName").trim().not().isEmpty(),
-    check("email")
+    body("firstName").trim().not().isEmpty(),
+    body("lastName").trim().not().isEmpty(),
+    body("email")
       .trim()
       .isEmail()
       .withMessage("Invalid Email Address Supplied"),
-    check("pass1")
+    body("pass1")
       .trim()
       .isLength({ min: 5 })
       .withMessage("Password Cannot be less than five characters."),
   ],
+  userMiddleware.Validation,
+  userMiddleware.CheckUserExists,
   userController.newUser
 );
 router.post("/login", userController.userLogin);

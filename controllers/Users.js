@@ -1,75 +1,33 @@
 const UserModel = require("../models/User");
-const Emailer = require("../util/emailing");
-const bcrypt = require("bcryptjs");
-const { validationResult } = require("express-validator");
+const Mailer = require("../util/nodemail");
+const Hash = require("../util/hashing");
 const jwt = require("jsonwebtoken");
 
-const encrypt = (password) => {
-  var salt = bcrypt.genSaltSync(10);
-  var hash = bcrypt.hashSync(password, salt);
-  return hash;
-};
-
-const checkPassWord = (password, hash) => {
-  return bcrypt.compareSync(password, hash);
-};
-
-const checkUserExists = async (email) => {
-  try {
-    return await UserModel.findOne({ email: email }, (err, res) => {
-      return err ? "" : res;
-    });
-  } catch (err) {
-    return err;
-  }
+const regEmail = async (fn, email, hash) => {
+  const emailMsg = `Hi ${fn},
+            <p>You have successfully created an account on i-farms.com</p>
+            <p>Thank you for joining us!</p>
+            <p>Click the link below to verify & activate your account </p>
+            <a href="http://i-farms.com/verify-my-account?email=${email}&uuid=${hash}">Verify Account</a>
+            <p>Thank you for joining.</p>`;
+  await Mailer.registration(email, "Welcome Onboard i-farms.com!", emailMsg);
 };
 
 exports.newUser = async (req, res, next) => {
-  // create the new user account here ...
-  const errors = validationResult(req);
   try {
-    if (!errors.isEmpty()) {
-      console.log(errors.array());
-      return res.json({ success: false, errors: errors.array() });
-    }
-
     const { firstName, lastName, email, pass1: password } = req.body;
-    const hash = encrypt(password);
-    const newAccount = new UserModel({
-      firstName,
-      lastName,
-      email,
-      password: hash,
-    });
-
-    (await checkUserExists(email)) !== null
-      ? res.json({
-          success: false,
-          errors: [{ msg: `${email} already exists...` }],
-        })
-      : // save new user
-        newAccount.save((err, result) => {
-          if (err) {
-            return res.json({
-              success: false,
-              errors: [{ msg: "An Error Has Occured" }],
-            });
-          }
-          if (result) {
-            const emailMsg = `Hi ${firstName},
-            <p>You have successfully created an account on i-farms.com</p>
-            <p>Thank you for joining us!</p>
-            <p>Click the link below to verify & activate your account</p>
-            <a href="https://ifarms-app.surgh.sh/verify-my-account?email=${email}&uuid=${hash}">Verify Account</a>
-            <p>Thank you for joining.</p>
-            `;
-
-            Emailer.sendMail(email, emailMsg, "iFarms Account Verification");
-            res.json({ success: true, errors: false });
-          }
-        });
+    const hash = Hash.encrypt_(password);
+    const newAccount = new UserModel({ firstName, lastName, email, password });
+    const save = await newAccount.save();
+    if (!save) throw "An Error Occured While Saving This Account!";
+    await regEmail(firstName, email, hash);
+    res.status(201).json({ success: true, errors: false });
   } catch (error) {
     console.log(error);
+    res.status(400).json({
+      success: false,
+      errors: [{ msg: `Error : ${error}` }],
+    });
   }
 };
 
@@ -78,13 +36,18 @@ exports.userLogin = async (req, res_, next) => {
   UserModel.findOne({ email: email }, (err, res) => {
     if (err) {
       console.log(err);
-      res_.json({ success: false, msg: err.name });
+      res_.json({ success: false, msg: err.message });
       return;
     }
 
     if (res !== null) {
+      if (res.status === false)
+        return res_.json({
+          success: false,
+          msg: "Account exists, but not verified!",
+        });
       // sigin
-      if (checkPassWord(password, res.password)) {
+      if (Hash.checkPassWord(password, res.password)) {
         console.log(res._id);
         let token = jwt.sign({ id: res._id, email: email }, "iFarmSecretKey", {
           expiresIn: "24h",
@@ -145,3 +108,5 @@ exports.deleteUser = async (req, res) => {
       res.send("An Error Has Occured! ", err);
     });
 };
+
+exports.verifyUser = async (req, res) => {};

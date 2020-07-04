@@ -15,7 +15,7 @@ app.get("/", express.static(path.join(__dirname, "./images")));
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
