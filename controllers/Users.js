@@ -17,7 +17,12 @@ exports.newUser = async (req, res, next) => {
   try {
     const { firstName, lastName, email, pass1: password } = req.body;
     const hash = Hash.encrypt_(password);
-    const newAccount = new UserModel({ firstName, lastName, email, password });
+    const newAccount = new UserModel({
+      firstName,
+      lastName,
+      email,
+      password: hash,
+    });
     const save = await newAccount.save();
     if (!save) throw "An Error Occured While Saving This Account!";
     await regEmail(firstName, email, hash);
@@ -109,4 +114,7 @@ exports.deleteUser = async (req, res) => {
     });
 };
 
-exports.verifyUser = async (req, res) => {};
+exports.verifyUser = async (req, res) => {
+  const { email, uuid } = req.query;
+  console.log(email, uuid);
+};
