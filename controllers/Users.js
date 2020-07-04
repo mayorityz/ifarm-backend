@@ -115,6 +115,15 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.verifyUser = async (req, res) => {
-  const { email, uuid } = req.query;
-  console.log(email, uuid);
+  const { email, uuid } = req.body;
+  try {
+    let update_ = await UserModel.findOneAndUpdate(
+      { email, password: uuid, status: false },
+      { status: true }
+    );
+    if (update_ === null) throw "Invalid Verification Process!";
+    else res.send("ok!");
+  } catch (error) {
+    res.send(`${error}`);
+  }
 };
