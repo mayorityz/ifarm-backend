@@ -1,3 +1,4 @@
+require("dotenv").config();
 const Product = require("../models/Products");
 const UserModel = require("../models/User");
 const OrderModel = require("../models/Orders");
@@ -6,9 +7,9 @@ const uuid = require("uuid");
 
 const cloudinary = require("cloudinary");
 cloudinary.config({
-  cloud_name: "ifarms-app",
-  api_key: "241998374551364",
-  api_secret: "gZMJ6VDEmZ14EBOHPb-jKZgk5gA",
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_APIKEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
 });
 
 const userDetails = async (id) => {
@@ -159,11 +160,11 @@ exports.verify = async (req, res) => {
       // update the db...
       if (res_ === "Verification successful")
         res.redirect(
-          "https://ifarms-app.surge.sh/dashboard/shopping-cart?status=completed"
+          `${process.env.FRONTEND_URL}/dashboard/shopping-cart?status=completed`
         );
       else
         res.redirect(
-          "https://ifarms-app.surge.sh/dashboard/shopping-cart?status=error"
+          `${process.env.FRONTEND_URL}/dashboard/shopping-cart?status=error`
         );
     });
   } catch (error) {}
