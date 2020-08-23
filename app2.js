@@ -1,8 +1,8 @@
-const mailer_ = require("./util/nodemail");
+const mailer_ = require("./test-email");
 
 mailer_
-  .login_(
-    "zaroaringlamb@gmail.com",
+  .registration(
+    "mayority11@gmail.com",
     "tesing login app",
     "asun is life... I miss my boy "
   )
