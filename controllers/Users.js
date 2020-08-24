@@ -3,16 +3,6 @@ const Mailer = require("../util/nodemail");
 const Hash = require("../util/hashing");
 const jwt = require("jsonwebtoken");
 
-const regEmail = async (fn, email, hash) => {
-  const emailMsg = `Hi ${fn},
-            <p>You have successfully created an account on i-farms.com</p>
-            <p>Thank you for joining us!</p>
-            <p>Click the link below to verify & activate your account </p>
-            <a href="http://i-farms.com/verify-my-account?email=${email}&uuid=${hash}">Verify Account</a>
-            <p>Thank you for joining.</p>`;
-  await Mailer.registration(email, "Welcome Onboard i-farms.com!", emailMsg);
-};
-
 exports.newUser = async (req, res, next) => {
   try {
     const { firstName, lastName, email, pass1: password } = req.body;
@@ -25,8 +15,20 @@ exports.newUser = async (req, res, next) => {
     });
     const save = await newAccount.save();
     if (!save) throw "An Error Occured While Saving This Account!";
-    await regEmail(firstName, email, hash);
-    res.status(201).json({ success: true, errors: false });
+    else {
+      const newRegMsg = `Hi ${fn},
+            <p>You have successfully created an account on i-farms.com</p>
+            <p>Thank you for joining us!</p>
+            <p>Click the link below to verify & activate your account </p>
+            <a href="http://i-farms.com/verify-my-account?email=${email}&uuid=${hash}">Verify Account</a>
+            <p>Thank you for joining.</p>`;
+      await Mailer.registration(
+        email,
+        "iFarms : Account Verification",
+        newRegMsg
+      );
+      res.status(201).json({ success: true, errors: false });
+    }
   } catch (error) {
     console.log(error);
     res.status(400).json({
