@@ -30,4 +30,5 @@ router.get("/profile/:userid", userController.userProfile);
 router.post("/updateprofile/:userid", userController.userUpdate);
 router.post("/user/delete", userController.deleteUser);
 router.post("/verify-my-account", userController.verifyUser);
+router.post("/user/dashboard", userController.myDashboard);
 module.exports = router;

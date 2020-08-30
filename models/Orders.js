@@ -52,6 +52,20 @@ class CustomerOrders {
   static async updateOrder(options, update) {
     return await Order.findOneAndUpdate(options, update);
   }
+
+  static async countMyPendingOrders(query) {
+    try {
+      return await Order.countDocuments(query, function (err, count) {
+        if (err) {
+          return err;
+        } else {
+          return count;
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = CustomerOrders;

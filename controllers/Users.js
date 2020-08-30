@@ -1,4 +1,7 @@
 const UserModel = require("../models/User");
+const ProductModel = require("../models/Products");
+const InvestmentModel = require("../models/Investment");
+const OrderModel = require("../models/Orders");
 const Mailer = require("../util/nodemail");
 const Hash = require("../util/hashing");
 const jwt = require("jsonwebtoken");
@@ -128,4 +131,34 @@ exports.verifyUser = async (req, res) => {
   } catch (error) {
     res.send(`${error}`);
   }
+};
+
+exports.myDashboard = async (req, res) => {
+  const { id } = req.body;
+  /**
+    total payments
+    expected returns
+    total sales
+   */
+
+  //  products
+  const myProducts = await ProductModel.countMyProducts({ vendorId: id });
+  const myInvestments = await InvestmentModel.allInvestments({
+    investorId: id,
+  });
+  const myPendingOrders = await OrderModel.countMyPendingOrders({
+    customerId: id,
+    orderStatus: "InComplete",
+  });
+
+  res.status(201).json({
+    productCount: myProducts,
+    investmentCount: myInvestments,
+    pendingOrders: myPendingOrders,
+    totalPayments: 0,
+    expectedReturns: 0,
+    totalSales: 0,
+  });
+
+  // console.log(id);
 };

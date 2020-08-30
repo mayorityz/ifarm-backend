@@ -40,6 +40,26 @@ class Investments {
   static findOne(query) {
     return Investment.findOne(query);
   }
+
+  static allInvestments(query) {
+    try {
+      return Investment.countDocuments(query, function (err, count) {
+        if (err) {
+          return 0;
+        } else {
+          return count;
+        }
+      });
+    } catch (error) {}
+  }
+
+  static totalInvestmentAmount(query) {
+    try {
+      // return Investment.
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = Investments;

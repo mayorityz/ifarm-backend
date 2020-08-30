@@ -45,6 +45,21 @@ class Products {
     return Product.find(query);
   }
 
+  static countMyProducts(query) {
+    try {
+      return Product.countDocuments(query, function (err, count) {
+        if (err) {
+          return 0;
+        }
+        if (count) {
+          return count;
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   static productDetails(query) {
     return Product.find(query);
   }
