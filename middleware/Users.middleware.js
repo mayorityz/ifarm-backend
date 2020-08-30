@@ -4,7 +4,7 @@ const UserModel = require("../models/User");
 exports.Validation = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array() });
+    return res.status(201).json({ errors: errors.array() });
   }
   req.email = req.body.email;
   next();

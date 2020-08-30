@@ -34,9 +34,9 @@ exports.newUser = async (req, res, next) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(400).json({
+    res.status(201).json({
       success: false,
-      errors: [{ msg: `Error : ${error}` }],
+      errors: { msg: `${error}` },
     });
   }
 };
