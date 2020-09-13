@@ -14,3 +14,6 @@ exports.updateOrder = async (req, res) => {
   if (x !== null) return res.send("Order Completed");
   else return res.send("Connection Error!");
 };
+
+exports.myOrders = async (req, res) =>
+  res.send(await OrderModel.myOrders({ customerId: req.body.id }));

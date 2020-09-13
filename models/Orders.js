@@ -66,6 +66,21 @@ class CustomerOrders {
       console.log(error);
     }
   }
+
+  static async myOrders(query) {
+    try {
+      return await Order.find(query, (err, res) => {
+        if (err) {
+          return err;
+        }
+        if (res) {
+          return res;
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = CustomerOrders;
