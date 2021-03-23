@@ -19,17 +19,17 @@ exports.newUser = async (req, res, next) => {
     const save = await newAccount.save();
     if (!save) throw "An Error Occured While Saving This Account!";
     else {
-      const newRegMsg = `Hi ${firstName},
-            <p>You have successfully created an account on i-farms.com</p>
-            <p>Thank you for joining us!</p>
-            <p>Click the link below to verify & activate your account </p>
-            <a href="http://i-farms.com/verify-my-account?email=${email}&uuid=${hash}">Verify Account</a>
-            <p>Thank you for joining.</p>`;
-      await Mailer.registration(
-        email,
-        "iFarms : Account Verification",
-        newRegMsg
-      );
+      // const newRegMsg = `Hi ${firstName},
+      //       <p>You have successfully created an account on i-farms.com</p>
+      //       <p>Thank you for joining us!</p>
+      //       <p>Click the link below to verify & activate your account </p>
+      //       <a href="http://i-farms.com/verify-my-account?email=${email}&uuid=${hash}">Verify Account</a>
+      //       <p>Thank you for joining.</p>`;
+      // await Mailer.registration(
+      //   email,
+      //   "iFarms : Account Verification",
+      //   newRegMsg
+      // );
       res.status(201).json({ success: true, errors: false });
     }
   } catch (error) {
