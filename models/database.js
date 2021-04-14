@@ -1,6 +1,10 @@
 require("dotenv").config();
 const db = require("mongoose");
-const connection = db.connect(process.env.MONGODBURL, {
+
+const URL = !process.env.NODE_ENV
+  ? "mongodb://127.0.0.1:27017/ifarmApp"
+  : "mongodb+srv://mayorityz:majormayor@ifarms-app-wpmr0.mongodb.net/test?retryWrites=true&w=majority";
+const connection = db.connect(URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,

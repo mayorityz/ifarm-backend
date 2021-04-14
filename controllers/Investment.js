@@ -105,7 +105,9 @@ exports.verification = async (req, res, next) => {
           .catch((err) => console.log(err));
         console.log(update);
         if (update)
-          res.redirect("https://ifarms-app.surge.sh/dashboard/newinvestment");
+          res.redirect(
+            "https://ifarms-app.herokuapp.com/dashboard/newinvestment"
+          );
       } catch (error) {
         res.send("Database Connection Error!");
       }
