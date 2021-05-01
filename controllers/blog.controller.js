@@ -25,8 +25,13 @@ exports.createPost = async (req, res) => {
 
 // fetch all blogs.
 exports.fetchBlogs = async (req, res) => {
-  await blogModel.find({ blogTitle, content, postDate }, (er, docx) => {
-    if (er) res.status(400).send("An Error While Fetching Existing Blog Posts");
-    else res.status(200).send(docx);
-  });
+  try {
+    await blogModel.find({}, (er, docx) => {
+      if (er)
+        res.status(400).send("An Error While Fetching Existing Blog Posts");
+      else res.status(200).send(docx);
+    });
+  } catch (error) {
+    res.status(400).send(error);
+  }
 };
